@@ -25,7 +25,7 @@ const typeDefs = `
         price: Float!
         releaseYear: Int
         rating: Float
-        inStock: Boolean
+        isStock: Boolean
     }
 `;
 
@@ -34,9 +34,9 @@ const resolvers = {
   Query: {
     title: ()=> 'Node.js examples',
     price: () => 213.45,
-    releaseYear: () => 2019,
+    releaseYear: () => 1990,
     rating: () => 9.32,
-    inStock: () => true
+    isStock: () => true
   }
 };
 
