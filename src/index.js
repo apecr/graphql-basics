@@ -5,6 +5,8 @@ const typeDefs = `
     type Query {
         hello: String!
         name: String!
+        bio: String!
+        location: String!
     }
 `;
 
@@ -14,7 +16,9 @@ const resolvers = {
     hello() {
       return 'This is my first query!';
     },
-    name: _ => 'Alberto Eyo'
+    name: _ => 'Alberto Eyo',
+    location: _ => 'Madrid',
+    bio: _ => 'Software Engineer in Sngular and pather'
   }
 };
 
