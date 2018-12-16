@@ -8,25 +8,32 @@ import {GraphQLServer} from 'graphql-yoga';
 //  4. Float
 //  5. ID
 
+// Challenge:
+
+// Create query definition and resolver for each
+//
+// title - string product name
+// price - number as float
+// releaseYear - number as int (optional)
+// inStock - boolean
+
 // Type definitions (schema)
 const typeDefs = `
     type Query {
-        id: ID!
-        name: String!
-        age: Int!
-        employed: Boolean!
-        gpa: Float
+        title: String!
+        price: Float!
+        releaseYear: Int
+        inStock: Boolean
     }
 `;
 
 // Application Resolvers for API
 const resolvers = {
   Query: {
-    id: ()=> 'abc123',
-    name: () => 'Alberto Eyo',
-    age: () => 32,
-    employed: () => true,
-    gpa: () => 3.01
+    title: ()=> 'Node.js examples',
+    price: () => 213.45,
+    releaseYear: () => 2019,
+    inStock: () => true
   }
 };
 
