@@ -15,6 +15,7 @@ import {GraphQLServer} from 'graphql-yoga';
 // title - string product name
 // price - number as float
 // releaseYear - number as int (optional)
+// rating - float (optional)
 // inStock - boolean
 
 // Type definitions (schema)
@@ -23,6 +24,7 @@ const typeDefs = `
         title: String!
         price: Float!
         releaseYear: Int
+        rating: Float
         inStock: Boolean
     }
 `;
@@ -33,6 +35,7 @@ const resolvers = {
     title: ()=> 'Node.js examples',
     price: () => 213.45,
     releaseYear: () => 2019,
+    rating: () => 9.32,
     inStock: () => true
   }
 };
