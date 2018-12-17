@@ -1,13 +1,5 @@
 import { GraphQLServer } from 'graphql-yoga'
 
-// Challnege
-//
-// 1. Create a Post type
-// 2. Add id, title, body, and published (all non nullable)
-// 3. Define a "post" query that returns a single post
-// 4. Set up the resolver method to return some post data
-// 5. Test out the query
-
 // Type definitions (schema)
 const typeDefs = `
     type Query {
