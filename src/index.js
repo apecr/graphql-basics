@@ -1,5 +1,9 @@
 import { GraphQLServer } from 'graphql-yoga'
 
+// 1. Create an "add" query that returns a Float
+// 2. Set up "add" to take two arguments (a, b) wich are required floats.
+// 3. Have the resolver send back the sum of the two arguments.
+
 // Type definitions (schema)
 const typeDefs = `
     type Query {
