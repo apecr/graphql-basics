@@ -3,6 +3,7 @@ import { GraphQLServer } from 'graphql-yoga'
 // Type definitions (schema)
 const typeDefs = `
     type Query {
+      greeting(name: String, position: String): String!
       me: User!
       post: Post!
     }
@@ -26,6 +27,8 @@ const typeDefs = `
 // Application Resolvers for API
 const resolvers = {
   Query: {
+    greeting: (parent, {name, position}, ctx) =>
+      name && position ? `Hello ${name}! You are my favourite ${position}.` : 'Hello!',
     me: _ => ({
       id: '1234abdcs',
       name: 'Alberto Eyo',

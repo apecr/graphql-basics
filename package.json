@@ -6,9 +6,12 @@
   "scripts": {
     "test": "mocha --require babel-core/register -u tdd",
     "start": "babel-node src/index.js",
-    "dev": "nodemon src/index.js --exec babel-node"
+    "dev": "nodemon src/index.js --exec babel-node",
+    "coverage": "nyc --reporter=lcov --reporter=text-lcov npm test"
   },
-  "keywords": [],
+  "keywords": [
+    "npm-library"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -20,6 +23,7 @@
     "babel-preset-env": "^1.7.0",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
-    "nodemon": "^1.18.7"
+    "nodemon": "^1.18.7",
+    "nyc": "^13.1.0"
   }
 }
