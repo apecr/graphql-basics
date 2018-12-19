@@ -1,5 +1,11 @@
 import { GraphQLServer } from 'graphql-yoga'
 
+// 1. Set up an array of three posts with dummy post data (id, title, body, publisehd)
+// 2. Set up a posts query and resolver that returns all the posts
+// 3. Test the query out
+// 4. Add a query argument that only return posts that contain the query string in the title or body
+// 5. Run a few samples queries for posts with a specific title
+
 // Demo user data
 const users = [{
   id: '1',
