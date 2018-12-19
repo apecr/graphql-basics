@@ -81,15 +81,21 @@ const typeDefs = `
 
 
 // Application Resolvers for API
+
+const matchAgainstSeveralElements = (arrElements, query) =>
+  arrElements
+    .reduce((acc, element) =>
+      element.toLowerCase().includes(query.toLowerCase()) || acc, false)
+
 const resolvers = {
   Query: {
-    users: (parent, {query}, ctx, info) =>
+    users: (parent, { query }, ctx, info) =>
       query
         ? users.filter(user => user.name.toLowerCase().includes(query.toLowerCase()))
         : users,
-    posts: (parent, {query}, ctx, info) =>
+    posts: (parent, { query }, ctx, info) =>
       query
-        ? posts.filter(post => post.title.toLowerCase().includes(query.toLowerCase()))
+        ? posts.filter(post => matchAgainstSeveralElements([post.title, post.body], query))
         : posts,
     me: _ => ({
       id: '1234abdcs',
