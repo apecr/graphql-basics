@@ -1,4 +1,13 @@
 import { GraphQLServer } from 'graphql-yoga'
+import { assertAbstractType } from 'graphql'
+
+// Part I
+//
+// 1. Set up a "Comment" type with id and text fields. Both non-nullable
+// 2. Set up a "comments" array with 4 comments.
+// 3. Set up a "comments" query with a resolver that returns all the comments
+// 4. Run a query to get all the comments with both id and text fields
+
 
 // Demo user data
 const users = [{
