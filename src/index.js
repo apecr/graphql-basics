@@ -1,11 +1,15 @@
 import { GraphQLServer } from 'graphql-yoga'
 
-// Part I
+// Part II
+// Goal: Set up a relationship between Comment and User
 //
-// 1. Set up a "Comment" type with id and text fields. Both non-nullable
-// 2. Set up a "comments" array with 4 comments.
-// 3. Set up a "comments" query with a resolver that returns all the comments
-// 4. Run a query to get all the comments with both id and text fields
+// 1. Set up an author field on Comment.
+// 2. Update all comments in the array to have a new author field (use one of the user ids as value).
+// 3. Create a resolver for the Comments author field that returns the user who wrote the comment.
+// 4. Run a sample query that gets all the comments nd gets the author name.
+// 5. Set up a comments field on User.
+// 6. Set up a resolver for the User comments field that returns all the comments belonging to that user.
+// 7. Run a sample query that gets all the users and all their comments.
 
 
 // Demo user data
