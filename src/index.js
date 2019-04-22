@@ -1,5 +1,4 @@
 import { GraphQLServer } from 'graphql-yoga'
-import { assertAbstractType } from 'graphql'
 
 // Part I
 //
@@ -26,7 +25,6 @@ const users = [{
 }]
 
 // Demo post data
-
 const posts = [{
   id: '123456',
   title: 'Apertura Española',
@@ -65,6 +63,21 @@ const posts = [{
   author: '1'
 }]
 
+// Demo comments data
+const comments = [{
+  id: '1',
+  text: 'Comment number one'
+}, {
+  id: '2',
+  text: 'Comment number two'
+}, {
+  id: '3',
+  text: 'Comment for the number three post'
+}, {
+  id: '4',
+  text: 'This is comment number four. No more comments for the moment'
+}]
+
 // Type definitions (schema)
 const typeDefs = `
     type User {
@@ -83,9 +96,15 @@ const typeDefs = `
       author: User!
     }
 
+    type Comment {
+      id: ID!
+      text: String!
+    }
+
     type Query {
       users(query: String): [User!]!
       posts(query: String): [Post!]!
+      comments: [Comment!]!
       me: User!
       post: Post!
     }
@@ -120,7 +139,8 @@ const resolvers = {
       title: 'Some example title post',
       body: 'loren ipsum',
       published: false
-    })
+    }),
+    comments: _ => comments
   },
   Post: {
     author: (parent, args, ctx, info) => users.find(user => user.id === parent.author)
