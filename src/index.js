@@ -1,44 +1,5 @@
 import { GraphQLServer } from 'graphql-yoga'
 
-// 1. Set up an array of three posts with dummy post data (id, title, body, publisehd)
-// 2. Set up a posts query and resolver that returns all the posts
-// 3. Test the query out
-// 4. Add a query argument that only return posts that contain the query string in the title or body
-// 5. Run a few samples queries for posts with a specific title
-
-// Demo post data
-const posts = [{
-  id: '123456',
-  title: 'Apertura Española',
-  body: 'Defensa española, lucha contra la defensa berlinesa',
-  published: true
-}, {
-  id: '123457',
-  title: 'Defensa Francesa',
-  body: 'La francesa, el contraataque en el centro',
-  published: true
-}, {
-  id: '123458',
-  title: 'Apertura Catalana',
-  body: 'Los entresijos de la catalana',
-  published: false
-}, {
-  id: '123459',
-  title: 'Defensa Siciliana',
-  body: 'Variante Paulsen',
-  published: true
-}, {
-  id: '123460',
-  title: 'Defensa Siciliana',
-  body: 'Variante Najdorf',
-  published: false
-}, {
-  id: '123461',
-  title: 'Defensa Siciliana',
-  body: 'Ataque inglés',
-  published: true
-}]
-
 // Demo user data
 const users = [{
   id: '1',
@@ -55,6 +16,46 @@ const users = [{
   email: 'mike@example.com'
 }]
 
+// Demo post data
+
+const posts = [{
+  id: '123456',
+  title: 'Apertura Española',
+  body: 'Defensa española, lucha contra la defensa berlinesa',
+  published: true,
+  author: '1'
+}, {
+  id: '123457',
+  title: 'Defensa Francesa',
+  body: 'La francesa, el contraataque en el centro',
+  published: true,
+  author: '2'
+}, {
+  id: '123458',
+  title: 'Apertura Catalana',
+  body: 'Los entresijos de la catalana',
+  published: false,
+  author: '3'
+}, {
+  id: '123459',
+  title: 'Defensa Siciliana',
+  body: 'Variante Paulsen',
+  published: true,
+  author: '1'
+}, {
+  id: '123460',
+  title: 'Defensa Siciliana',
+  body: 'Variante Najdorf',
+  published: false,
+  author: '2'
+}, {
+  id: '123461',
+  title: 'Defensa Siciliana',
+  body: 'Ataque inglés',
+  published: true,
+  author: '1'
+}]
+
 // Type definitions (schema)
 const typeDefs = `
     type User {
@@ -69,6 +70,7 @@ const typeDefs = `
       title: String!
       body: String!
       published: Boolean!
+      author: User!
     }
 
     type Query {
@@ -109,6 +111,9 @@ const resolvers = {
       body: 'loren ipsum',
       published: false
     })
+  },
+  Post: {
+    author: (parent, args, ctx, info) => users.find(user => user.id === parent.author)
   }
 }
 
