@@ -35,3 +35,14 @@ query{
   }
 }
 ```
+
+Query the comments:
+
+```javascript
+query{
+  comments{
+    id
+    text
+  }
+}
+```
