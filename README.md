@@ -155,7 +155,7 @@ Response:
 
 Query:
 
-´´´javascript
+```javascript
 query{
   comments{
     id
