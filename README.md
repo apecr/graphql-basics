@@ -47,7 +47,7 @@ query{
 }
 ```
 
-** Challenge I
+## Challenge I
 
 - Get the users
 
