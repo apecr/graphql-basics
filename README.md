@@ -163,6 +163,10 @@ query{
     author{
       name
     }
+    post{
+      id
+      title
+    }
   }
 }
 ```
@@ -178,6 +182,10 @@ Response:
         "text": "Comment number one",
         "author": {
           "name": "Andrew"
+        },
+        "post": {
+          "id": "123456",
+          "title": "Apertura Española"
         }
       },
       {
@@ -185,6 +193,10 @@ Response:
         "text": "Comment number two",
         "author": {
           "name": "Sara"
+        },
+        "post": {
+          "id": "123456",
+          "title": "Apertura Española"
         }
       },
       {
@@ -192,6 +204,10 @@ Response:
         "text": "Comment for the number three post",
         "author": {
           "name": "Andrew"
+        },
+        "post": {
+          "id": "123457",
+          "title": "Defensa Francesa"
         }
       },
       {
@@ -199,9 +215,104 @@ Response:
         "text": "This is comment number four. No more comments for the moment",
         "author": {
           "name": "Mike"
+        },
+        "post": {
+          "id": "123458",
+          "title": "Apertura Catalana"
         }
       }
     ]
   }
 }
 ```
+
+- Get the posts
+
+Query:
+
+```javascript
+query{
+  posts{
+    id
+    title
+    body
+    published
+    comments{
+      id
+      text
+    }
+  }
+}
+````
+
+Response:
+
+```javascript
+{
+  "data": {
+    "posts": [
+      {
+        "id": "123456",
+        "title": "Apertura Española",
+        "body": "Defensa española, lucha contra la defensa berlinesa",
+        "published": true,
+        "comments": [
+          {
+            "id": "1",
+            "text": "Comment number one"
+          },
+          {
+            "id": "2",
+            "text": "Comment number two"
+          }
+        ]
+      },
+      {
+        "id": "123457",
+        "title": "Defensa Francesa",
+        "body": "La francesa, el contraataque en el centro",
+        "published": true,
+        "comments": [
+          {
+            "id": "3",
+            "text": "Comment for the number three post"
+          }
+        ]
+      },
+      {
+        "id": "123458",
+        "title": "Apertura Catalana",
+        "body": "Los entresijos de la catalana",
+        "published": false,
+        "comments": [
+          {
+            "id": "4",
+            "text": "This is comment number four. No more comments for the moment"
+          }
+        ]
+      },
+      {
+        "id": "123459",
+        "title": "Defensa Siciliana",
+        "body": "Variante Paulsen",
+        "published": true,
+        "comments": []
+      },
+      {
+        "id": "123460",
+        "title": "Defensa Siciliana",
+        "body": "Variante Najdorf",
+        "published": false,
+        "comments": []
+      },
+      {
+        "id": "123461",
+        "title": "Defensa Siciliana",
+        "body": "Ataque inglés",
+        "published": true,
+        "comments": []
+      }
+    ]
+  }
+}
+````

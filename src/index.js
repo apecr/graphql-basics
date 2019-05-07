@@ -3,8 +3,8 @@ import { GraphQLServer } from 'graphql-yoga'
 // Part III
 // Goal: Set up a relationship between Comment and Post
 //
-// 1. Set up an post field on Comment.
-// 2. Update all comments in the array to have a new posts field (use one of the post ids as value).
+// 1. Set up a post field on Comment.
+// 2. Update all comments in the array to have a new post field (use one of the post ids as value).
 // 3. Create a resolver for the Comments post field that returns the post that the comment belong to.
 // 4. Run a sample query that gets all the comments and gets the post name.
 // 5. Set up a comments field on Post.
@@ -71,19 +71,23 @@ const posts = [{
 const comments = [{
   id: '1',
   text: 'Comment number one',
-  author: '1'
+  author: '1',
+  post: '123456'
 }, {
   id: '2',
   text: 'Comment number two',
-  author: '2'
+  author: '2',
+  post: '123456'
 }, {
   id: '3',
   text: 'Comment for the number three post',
-  author: '1'
+  author: '1',
+  post: '123457'
 }, {
   id: '4',
   text: 'This is comment number four. No more comments for the moment',
-  author: '3'
+  author: '3',
+  post: '123458'
 }]
 
 // Type definitions (schema)
@@ -103,12 +107,14 @@ const typeDefs = `
       body: String!
       published: Boolean!
       author: User!
+      comments: [Comment!]!
     }
 
     type Comment {
       id: ID!
       text: String!
       author: User!
+      post: Post!
     }
 
     type Query {
@@ -124,6 +130,9 @@ const typeDefs = `
 // Application Resolvers for API
 
 const getAuthor = parent => users.find(user => user.id === parent.author)
+const getPost = parent => posts.find(post => post.id === parent.post)
+const getComments = parent => comments.filter(comment => comment.author === parent.id)
+const getCommentsFromPost = parent => comments.filter(comment => comment.post === parent.id)
 
 const matchAgainstSeveralElements = (arrElements, query) =>
   arrElements
@@ -155,14 +164,16 @@ const resolvers = {
     comments: _ => comments
   },
   Post: {
-    author: getAuthor
+    author: getAuthor,
+    comments: getCommentsFromPost
   },
   User: {
     posts: parent => posts.filter(post => post.author === parent.id),
-    comments: parent => comments.filter(comment => comment.author === parent.id)
+    comments: getComments
   },
   Comment: {
-    author: getAuthor
+    author: getAuthor,
+    post: getPost
   }
 }
 
