@@ -377,4 +377,46 @@ Response:
 }
 ```
 
+** createComment
+
+```javascript
+mutation{
+  createComment(text: "Comentario creado desde el cliente",
+  author: "1", post: "123456"){
+    id
+    text
+    post{
+      id
+      title
+    }
+    author{
+      id
+      name
+      email
+    }
+  }
+}
+```
+
+Response:
+
+```javascript
+{
+  "data": {
+    "createComment": {
+      "id": "0a03fdec-a14f-4aa7-a366-bd1241f21a13",
+      "text": "Comentario creado desde el cliente",
+      "post": {
+        "id": "123456",
+        "title": "Apertura Española"
+      },
+      "author": {
+        "id": "1",
+        "name": "Andrew",
+        "email": "andrew@example.com"
+      }
+    }
+  }
+}
+```
 
