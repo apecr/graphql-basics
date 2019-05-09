@@ -9,7 +9,7 @@ import { exists } from 'fs'
 //   - Should return a comment
 // 2. Define a resolver method for createComment
 //   - Confirm that the user exists, else throw an Error
-//   - Confirm that the post exists, else throw an Error
+//   - Confirm that the post exists and is published, else throw an Error
 //   - If they do exist, create the comment and return it
 // 3. Run the mutation and add a comment
 // 4. Use the comments query to verify the comment was added
@@ -180,7 +180,7 @@ const resolvers = {
     comments: _ => comments
   },
   Mutation: {
-    createUser: (parent, {name, email, age = 0}, ctx, info) => {
+    createUser: (parent, { name, email, age = 0 }, ctx, info) => {
       checkElementsFromArrayAndThrowError(users, user => user.email === email, 'Email taken')
       const newUser = {
         id: uuidv4(),
@@ -191,15 +191,21 @@ const resolvers = {
       users.push(newUser)
       return newUser
     },
-    createPost: (parent, {title, body, published, author}) => {
-      checkElementsFromArrayAndThrowError(users, user => user.id === author, 'User does not exist')
-      const newPost = {title, body, published, author, id: uuidv4()}
+    createPost: (parent, { title, body, published, author }) => {
+      checkElementsFromArrayAndThrowError(users,
+        user => user.id === author,
+        'User does not exist')
+      const newPost = { title, body, published, author, id: uuidv4() }
       posts.push(newPost)
       return newPost
     },
-    createComment: (parent, {text, author, post}) => {
-      checkElementsFromArrayAndThrowError(users, user => user.id === author, 'User does not exist')
-      checkElementsFromArrayAndThrowError(posts, postA => postA.id === post, 'Post does not exist')
+    createComment: (parent, { text, author, post }) => {
+      checkElementsFromArrayAndThrowError(users,
+        user => user.id === author,
+        'User does not exist')
+      checkElementsFromArrayAndThrowError(posts,
+        postA => postA.id === post && postA.published === true,
+        'Post does not exist or is not published')
       const newComment = {
         id: uuidv4(),
         text, author, post
