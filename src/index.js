@@ -1,5 +1,18 @@
 import { GraphQLServer } from 'graphql-yoga'
 import uuidv4 from 'uuid/v4'
+import { exists } from 'fs'
+
+// Goal: Allow users to create commments
+
+// 1. Define a new createComment mutation
+//   - Should take text, author and post
+//   - Should return a comment
+// 2. Define a resolver method for createComment
+//   - Confirm that the user exists, else throw an Error
+//   - Confirm that the post exists, else throw an Error
+//   - If they do exist, create the comment and return it
+// 3. Run the mutation and add a comment
+// 4. Use the comments query to verify the comment was added
 
 
 // Demo user data
@@ -118,6 +131,7 @@ const typeDefs = `
     type Mutation{
       createUser(name: String!, email: String!, age: Int): User!
       createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
+      createComment(text: String!, author: ID!, post: ID!): Comment!
     }
 `
 
@@ -133,6 +147,13 @@ const matchAgainstSeveralElements = (arrElements, query) =>
   arrElements
     .reduce((acc, element) =>
       element.toLowerCase().includes(query.toLowerCase()) || acc, false)
+
+const checkElementsFromArrayAndThrowError = (arrayOfElements, comparation, errorMessage) => {
+  const checkElements = arrayOfElements.some(comparation)
+  if (!checkElements) {
+    throw new Error(errorMessage)
+  }
+}
 
 const resolvers = {
   Query: {
@@ -160,11 +181,7 @@ const resolvers = {
   },
   Mutation: {
     createUser: (parent, {name, email, age = 0}, ctx, info) => {
-      console.log(name, email, age)
-      const emailTaken = users.some(user => user.email === email)
-      if (emailTaken) {
-        throw new Error('Email taken')
-      }
+      checkElementsFromArrayAndThrowError(users, user => user.email === email, 'Email taken')
       const newUser = {
         id: uuidv4(),
         name,
@@ -175,13 +192,20 @@ const resolvers = {
       return newUser
     },
     createPost: (parent, {title, body, published, author}) => {
-      const authorExist = users.some(user => user.id === author)
-      if (!authorExist) {
-        throw new Error('User does not exist')
-      }
+      checkElementsFromArrayAndThrowError(users, user => user.id === author, 'User does not exist')
       const newPost = {title, body, published, author, id: uuidv4()}
       posts.push(newPost)
       return newPost
+    },
+    createComment: (parent, {text, author, post}) => {
+      checkElementsFromArrayAndThrowError(users, user => user.id === author, 'User does not exist')
+      checkElementsFromArrayAndThrowError(posts, postA => postA.id === post, 'Post does not exist')
+      const newComment = {
+        id: uuidv4(),
+        text, author, post
+      }
+      comments.push(newComment)
+      return newComment
     }
   },
   Post: {
