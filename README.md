@@ -317,11 +317,11 @@ Response:
 }
 ````
 
-** Mutations
+## Mutations
 
 Several methods that modifiy the system.
 
-** createUser
+### createUser
 
 ```javascript
 mutation{
@@ -349,7 +349,7 @@ Response:
 }
 ```
 
-** createPost
+### createPost
 
 ```javascript
 mutation{
@@ -377,7 +377,7 @@ Response:
 }
 ```
 
-** createComment
+### createComment
 
 ```javascript
 mutation{
