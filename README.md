@@ -316,3 +316,41 @@ Response:
   }
 }
 ````
+
+** Mutations
+
+Several methods that modifiy the system.
+
+** createUser
+
+```javascript
+mutation{
+  createUser(name: "Alberto", email: "alberto.eyo@example.com"){
+    id
+    name
+    email
+    age
+  }
+}
+```
+
+Response: 
+
+```javascript
+{
+  "data": {
+    "createUser": {
+      "id": "0cd392b5-e9ab-45d8-af40-5b0e912625e7",
+      "name": "Alberto",
+      "email": "alberto.eyo@example.com",
+      "age": 0
+    }
+  }
+}
+```
+
+** createPost
+
+```javascript
+
+
