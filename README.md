@@ -352,5 +352,29 @@ Response:
 ** createPost
 
 ```javascript
+mutation{
+  createPost(title: "Post from client", 
+    body: "This is the first post from the client", 
+    published: true, author: "1"){
+   id
+   title
+   body
+  }
+}
+````
+
+Response:
+
+```javascript
+{
+  "data": {
+    "createPost": {
+      "id": "1669924f-241b-4a84-b107-41723d0067e2",
+      "title": "Post from client",
+      "body": "This is the first post from the client"
+    }
+  }
+}
+```
 
 
