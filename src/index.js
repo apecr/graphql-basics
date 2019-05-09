@@ -155,6 +155,8 @@ const checkElementsFromArrayAndThrowError = (arrayOfElements, comparation, error
   }
 }
 
+const checkUserId = author => user => user.id === author
+
 const resolvers = {
   Query: {
     users: (parent, { query }, ctx, info) =>
@@ -193,7 +195,7 @@ const resolvers = {
     },
     createPost: (parent, { title, body, published, author }) => {
       checkElementsFromArrayAndThrowError(users,
-        user => user.id === author,
+        checkUserId(author),
         'User does not exist')
       const newPost = { title, body, published, author, id: uuidv4() }
       posts.push(newPost)
@@ -201,7 +203,7 @@ const resolvers = {
     },
     createComment: (parent, { text, author, post }) => {
       checkElementsFromArrayAndThrowError(users,
-        user => user.id === author,
+        checkUserId(author),
         'User does not exist')
       checkElementsFromArrayAndThrowError(posts,
         postA => postA.id === post && postA.published === true,
