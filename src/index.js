@@ -1,6 +1,5 @@
 import { GraphQLServer } from 'graphql-yoga'
 import uuidv4 from 'uuid/v4'
-import { exists } from 'fs'
 
 // Goal: Allow users to create commments
 
@@ -193,11 +192,11 @@ const resolvers = {
       users.push(newUser)
       return newUser
     },
-    createPost: (parent, { title, body, published, author }) => {
+    createPost: (parent, args) => {
       checkElementsFromArrayAndThrowError(users,
-        checkUserId(author),
+        checkUserId(args.author),
         'User does not exist')
-      const newPost = { title, body, published, author, id: uuidv4() }
+      const newPost = { ...args, id: uuidv4() }
       posts.push(newPost)
       return newPost
     },
