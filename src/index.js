@@ -1,17 +1,14 @@
 import { GraphQLServer } from 'graphql-yoga'
 import uuidv4 from 'uuid/v4'
 
-// Goal: Allow users to create commments
+// Goal: Creat input types for createPost and createComment
 
-// 1. Define a new createComment mutation
-//   - Should take text, author and post
-//   - Should return a comment
-// 2. Define a resolver method for createComment
-//   - Confirm that the user exists, else throw an Error
-//   - Confirm that the post exists and is published, else throw an Error
-//   - If they do exist, create the comment and return it
-// 3. Run the mutation and add a comment
-// 4. Use the comments query to verify the comment was added
+// 1. Create an input type for createPost with the same fields. Use "data" or "post" as arg name.
+// 2. Update createPost resolver to use this new object
+// 3. Verify application still works by creating a post and fetching it.
+// 4. Create an input type for createComment with the same fields. Use "data" or "comment" as arg name.
+// 5. Update createComment resolver to use this new object.
+// 6. erify application still works by creating a comment and fetching it.
 
 
 // Demo user data
@@ -127,8 +124,14 @@ const typeDefs = `
       post: Post!
     }
 
+    input CreateUserInput{
+      name: String!
+      email: String!
+      age: Int
+    }
+
     type Mutation{
-      createUser(name: String!, email: String!, age: Int): User!
+      createUser(data: CreateUserInput): User!
       createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
       createComment(text: String!, author: ID!, post: ID!): Comment!
     }
@@ -147,9 +150,10 @@ const matchAgainstSeveralElements = (arrElements, query) =>
     .reduce((acc, element) =>
       element.toLowerCase().includes(query.toLowerCase()) || acc, false)
 
-const checkElementsFromArrayAndThrowError = (arrayOfElements, comparation, errorMessage) => {
-  const checkElements = arrayOfElements.some(comparation)
-  if (!checkElements) {
+const checkElementsFromArrayAndThrowError = (arrayOfElements, comparation, errorMessage, any = false) => {
+  const checkElements = arrayOfElements.some(comparation) // check the elements some aplies the function
+  console.log(checkElements, arrayOfElements)
+  if ((any && checkElements) || (!any && !checkElements)) {
     throw new Error(errorMessage)
   }
 }
@@ -181,8 +185,9 @@ const resolvers = {
     comments: _ => comments
   },
   Mutation: {
-    createUser: (parent, { name, email, age = 0 }, ctx, info) => {
-      checkElementsFromArrayAndThrowError(users, user => user.email === email, 'Email taken')
+    createUser: (parent, {data}, ctx, info) => {
+      const {name, email, age = 0 } = data
+      checkElementsFromArrayAndThrowError(users, user => user.email === email, 'Email taken', true)
       const newUser = {
         id: uuidv4(),
         name,
