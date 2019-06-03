@@ -1,16 +1,6 @@
 import { GraphQLServer } from 'graphql-yoga'
 import uuidv4 from 'uuid/v4'
 
-// Goal: Creat input types for createPost and createComment
-
-// 1. Create an input type for createPost with the same fields. Use "data" or "post" as arg name.
-// 2. Update createPost resolver to use this new object
-// 3. Verify application still works by creating a post and fetching it.
-// 4. Create an input type for createComment with the same fields. Use "data" or "comment" as arg name.
-// 5. Update createComment resolver to use this new object.
-// 6. erify application still works by creating a comment and fetching it.
-
-
 // Demo user data
 const users = [{
   id: '1',
@@ -130,10 +120,23 @@ const typeDefs = `
       age: Int
     }
 
+    input CreatePostInput{
+      title: String!
+      body: String!
+      published: Boolean!
+      author: ID!
+    }
+
+    input CreateCommentInput{
+      text: String!
+      author: ID!
+      post: ID!
+    }
+
     type Mutation{
       createUser(data: CreateUserInput): User!
-      createPost(title: String!, body: String!, published: Boolean!, author: ID!): Post!
-      createComment(text: String!, author: ID!, post: ID!): Comment!
+      createPost(post: CreatePostInput): Post!
+      createComment(comment: CreateCommentInput): Comment!
     }
 `
 
@@ -197,15 +200,16 @@ const resolvers = {
       users.push(newUser)
       return newUser
     },
-    createPost: (parent, args) => {
+    createPost: (parent, {post}) => {
       checkElementsFromArrayAndThrowError(users,
-        checkUserId(args.author),
+        checkUserId(post.author),
         'User does not exist')
-      const newPost = { ...args, id: uuidv4() }
+      const newPost = { ...post, id: uuidv4() }
       posts.push(newPost)
       return newPost
     },
-    createComment: (parent, { text, author, post }) => {
+    createComment: (parent, {comment}) => {
+      const { text, author, post } = comment
       checkElementsFromArrayAndThrowError(users,
         checkUserId(author),
         'User does not exist')
