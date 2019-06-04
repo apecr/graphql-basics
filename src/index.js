@@ -1,6 +1,15 @@
 import { GraphQLServer } from 'graphql-yoga'
 import uuidv4 from 'uuid/v4'
 
+// Goal: set up a mutation for deleting a post
+
+// 1. Define a mutation. It should take the post ID. It should return the post itself.
+// 2. Define the resolver for the mutation
+//    - Check if the post exists, else throw an error
+//    - Remove and return the post
+//    - Remove all the comments belonging to that post
+// 3. Test your work by running query to delete a post. Verify post/comments are removed
+
 // Demo user data
 const users = [{
   id: '1',
