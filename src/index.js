@@ -1,14 +1,13 @@
 import { GraphQLServer } from 'graphql-yoga'
 import uuidv4 from 'uuid/v4'
 
-// Goal: set up a mutation for deleting a post
+// Goal: set up a mutation for deleting a comment
 
-// 1. Define a mutation. It should take the post ID. It should return the post itself.
+// 1. Define a mutation. It should take the comment ID. It should return the comment itself.
 // 2. Define the resolver for the mutation
-//    - Check if the post exists, else throw an error
+//    - Check if the comment exists, else throw an error
 //    - Remove and return the post
-//    - Remove all the comments belonging to that post
-// 3. Test your work by running query to delete a post. Verify post/comments are removed
+// 3. Test your work by running query to delete a post. Verify comment is removed
 
 // Demo user data
 const users = [{
@@ -145,9 +144,10 @@ const typeDefs = `
     type Mutation{
       createUser(data: CreateUserInput!): User!
       deleteUser(id: ID!): User!
-      deletePost(id: ID!): Post!
       createPost(post: CreatePostInput!): Post!
+      deletePost(id: ID!): Post!
       createComment(comment: CreateCommentInput!): Comment!
+      deleteComment(id: ID!): Comment!
     }
 `
 
@@ -262,6 +262,14 @@ const resolvers = {
       }
       comments.push(newComment)
       return newComment
+    },
+    deleteComment: (parent, {id}) => {
+      const commentIndex = comments.findIndex(comment => comment.id === id)
+
+      if (commentIndex === -1) {
+        throw new Error('Comment not found')
+      }
+      return comments.splice(commentIndex, 1)[0]
     }
   },
   Post: {
