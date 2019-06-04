@@ -18,7 +18,7 @@ const users = [{
 }]
 
 // Demo post data
-const posts = [{
+let posts = [{
   id: '123456',
   title: 'Apertura Española',
   body: 'Defensa española, lucha contra la defensa berlinesa',
@@ -57,7 +57,7 @@ const posts = [{
 }]
 
 // Demo comments data
-const comments = [{
+let comments = [{
   id: '1',
   text: 'Comment number one',
   author: '1',
@@ -135,6 +135,7 @@ const typeDefs = `
 
     type Mutation{
       createUser(data: CreateUserInput!): User!
+      deleteUser(id: ID!): User!
       createPost(post: CreatePostInput!): Post!
       createComment(comment: CreateCommentInput!): Comment!
     }
@@ -188,8 +189,8 @@ const resolvers = {
     comments: _ => comments
   },
   Mutation: {
-    createUser: (parent, {data}, ctx, info) => {
-      const {name, email, age = 0 } = data
+    createUser: (parent, { data }, ctx, info) => {
+      const { name, email, age = 0 } = data
       checkElementsFromArrayAndThrowError(users, user => user.email === email, 'Email taken', true)
       const newUser = {
         id: uuidv4(),
@@ -200,7 +201,25 @@ const resolvers = {
       users.push(newUser)
       return newUser
     },
-    createPost: (parent, {post}) => {
+    deleteUser: (parent, { id }) => {
+      const userIndex = users.findIndex(user => user.id === id)
+      if (userIndex === -1) {
+        throw new Error('User not found')
+      }
+      const deletedUsers = users.splice(userIndex, 1)
+
+      posts = posts.filter(post => {
+        const match = post.author === id
+        if (match) {
+          comments = comments.filter(comment => comment.post !== post.id)
+        }
+        comments = comments.filter(comment => comment.author === id)
+        return !match
+      })
+
+      return deletedUsers[0]
+    },
+    createPost: (parent, { post }) => {
       checkElementsFromArrayAndThrowError(users,
         checkUserId(post.author),
         'User does not exist')
@@ -208,7 +227,7 @@ const resolvers = {
       posts.push(newPost)
       return newPost
     },
-    createComment: (parent, {comment}) => {
+    createComment: (parent, { comment }) => {
       const { text, author, post } = comment
       checkElementsFromArrayAndThrowError(users,
         checkUserId(author),
