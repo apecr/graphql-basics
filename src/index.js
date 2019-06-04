@@ -145,6 +145,7 @@ const typeDefs = `
     type Mutation{
       createUser(data: CreateUserInput!): User!
       deleteUser(id: ID!): User!
+      deletePost(id: ID!): Post!
       createPost(post: CreatePostInput!): Post!
       createComment(comment: CreateCommentInput!): Comment!
     }
@@ -227,6 +228,17 @@ const resolvers = {
       })
 
       return deletedUsers[0]
+    },
+    deletePost: (parent, {id}) => {
+      const postIndex = posts.findIndex(post => post.id === id)
+      if (postIndex === -1) {
+        throw new Error('Post not found')
+      }
+      const deletedPosts = posts.splice(postIndex, 1)
+
+      comments = comments.filter(comment => comment.post !== id)
+
+      return deletedPosts[0]
     },
     createPost: (parent, { post }) => {
       checkElementsFromArrayAndThrowError(users,
