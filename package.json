@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha --require babel-core/register -u tdd",
     "start": "babel-node src/index.js",
-    "dev": "nodemon src/index.js --exec babel-node",
+    "dev": "nodemon src/index.js --ext js,graphql --exec babel-node",
     "coverage": "nyc --reporter=lcov --reporter=text-lcov npm test"
   },
   "keywords": [
