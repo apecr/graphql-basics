@@ -1,17 +1,6 @@
 import uuidv4 from 'uuid/v4'
 import { checkElementsFromArrayAndThrowError, checkUserId } from './../utils'
 
-// Goal: set up a mutation for updating a comment
-//
-// 1. Define a mutation
-//  - Add id/data for arguments. Setup data to support text
-//  - Return the updated comment
-// 2. Create a resolver method
-//  - Verify comment exists, else throw an error
-//  - Update comment properties, one at a time
-// 3. Verify ypur work by updateing all the properties for a given comment
-
-
 const Mutation = {
   createUser: (parent, { data }, { db }, info) => {
     const { name, email, age = 0 } = data
