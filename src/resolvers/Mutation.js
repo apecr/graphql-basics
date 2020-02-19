@@ -1,8 +1,19 @@
 import uuidv4 from 'uuid/v4'
-import {checkElementsFromArrayAndThrowError, checkUserId} from './../utils'
+import { checkElementsFromArrayAndThrowError, checkUserId } from './../utils'
+
+// Goal: set up a mutation for updating a post
+//
+// 1. Define a mutation
+//  - Add id/data for arguments. Setup data to support title, body and publisehd
+//  - Return the updated post
+// 2. Create a resolver method
+//  - Verify post exists, else throw an error
+//  - Update post properties, one at a time
+// 3. Verify ypur work by updateing all the properties for a given post
+
 
 const Mutation = {
-  createUser: (parent, { data }, {db}, info) => {
+  createUser: (parent, { data }, { db }, info) => {
     const { name, email, age = 0 } = data
     checkElementsFromArrayAndThrowError(db.users, user => user.email === email, 'Email taken', true)
     const newUser = {
@@ -14,7 +25,7 @@ const Mutation = {
     db.users.push(newUser)
     return newUser
   },
-  deleteUser: (parent, { id }, {db}) => {
+  deleteUser: (parent, { id }, { db }) => {
     const userIndex = db.users.findIndex(user => user.id === id)
     if (userIndex === -1) {
       throw new Error('User not found')
@@ -32,11 +43,12 @@ const Mutation = {
 
     return deletedUsers[0]
   },
-  updateUser: (parent, {id, data}, {db}, info) => {
-    // let user = checkElementsFromArrayAndThrowError(db.users,
-    //   checkUserId(id),
-    //   'User does not exist')
+  updateUser: (parent, { id, data }, { db }, info) => {
     const userToUpdate = db.users.find(user => user.id === id)
+
+    if (!userToUpdate) {
+      throw new Error('User not found')
+    }
 
     if (typeof data.email === 'string') {
       const emailTaken = db.users.some(user => user.email === data.email)
@@ -56,7 +68,7 @@ const Mutation = {
 
     return userToUpdate
   },
-  deletePost: (parent, { id }, {db}) => {
+  deletePost: (parent, { id }, { db }) => {
     const postIndex = db.posts.findIndex(post => post.id === id)
     if (postIndex === -1) {
       throw new Error('Post not found')
@@ -67,7 +79,7 @@ const Mutation = {
 
     return deletedPosts[0]
   },
-  createPost: (parent, { post }, {db}) => {
+  createPost: (parent, { post }, { db }) => {
     checkElementsFromArrayAndThrowError(db.users,
       checkUserId(post.author),
       'User does not exist')
@@ -75,7 +87,28 @@ const Mutation = {
     db.posts.push(newPost)
     return newPost
   },
-  createComment: (parent, { comment }, {db}) => {
+  updatePost: (parent, { id, data }, { db }, info) => {
+    const postToUpdate = db.posts.find(post => post.id === id)
+
+    if (!postToUpdate) {
+      throw new Error('Post not found')
+    }
+
+    if (typeof data.title === 'string') {
+      postToUpdate.title = data.title
+    }
+
+    if (typeof data.body === 'string') {
+      postToUpdate.body = data.body
+    }
+
+    if (typeof data.published === 'boolean') {
+      postToUpdate.published = data.published
+    }
+
+    return postToUpdate
+  },
+  createComment: (parent, { comment }, { db }) => {
     const { text, author, post } = comment
     checkElementsFromArrayAndThrowError(db.users,
       checkUserId(author),
@@ -90,7 +123,7 @@ const Mutation = {
     db.comments.push(newComment)
     return newComment
   },
-  deleteComment: (parent, { id }, {db}) => {
+  deleteComment: (parent, { id }, { db }) => {
     const commentIndex = db.comments.findIndex(comment => comment.id === id)
 
     if (commentIndex === -1) {
@@ -100,4 +133,4 @@ const Mutation = {
   }
 }
 
-export {Mutation as default}
+export { Mutation as default }
