@@ -1,15 +1,15 @@
 import uuidv4 from 'uuid/v4'
 import { checkElementsFromArrayAndThrowError, checkUserId } from './../utils'
 
-// Goal: set up a mutation for updating a post
+// Goal: set up a mutation for updating a comment
 //
 // 1. Define a mutation
-//  - Add id/data for arguments. Setup data to support title, body and publisehd
-//  - Return the updated post
+//  - Add id/data for arguments. Setup data to support text
+//  - Return the updated comment
 // 2. Create a resolver method
-//  - Verify post exists, else throw an error
-//  - Update post properties, one at a time
-// 3. Verify ypur work by updateing all the properties for a given post
+//  - Verify comment exists, else throw an error
+//  - Update comment properties, one at a time
+// 3. Verify ypur work by updateing all the properties for a given comment
 
 
 const Mutation = {
@@ -122,6 +122,20 @@ const Mutation = {
     }
     db.comments.push(newComment)
     return newComment
+  },
+  updateComment: (parent, { id, data }, { db }, info) => {
+    const commentToUpdate = db.comments.find(comment => comment.id === id)
+
+    if (!commentToUpdate) {
+      throw new Error('Comment not found')
+    }
+
+    if (typeof data.text === 'string') {
+      commentToUpdate.text = data.text
+    }
+
+    return commentToUpdate
+
   },
   deleteComment: (parent, { id }, { db }) => {
     const commentIndex = db.comments.findIndex(comment => comment.id === id)
