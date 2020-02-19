@@ -32,6 +32,30 @@ const Mutation = {
 
     return deletedUsers[0]
   },
+  updateUser: (parent, {id, data}, {db}, info) => {
+    // let user = checkElementsFromArrayAndThrowError(db.users,
+    //   checkUserId(id),
+    //   'User does not exist')
+    const userToUpdate = db.users.find(user => user.id === id)
+
+    if (typeof data.email === 'string') {
+      const emailTaken = db.users.some(user => user.email === data.email)
+      if (emailTaken) {
+        throw new Error('Email in use')
+      }
+      userToUpdate.email = data.email
+    }
+
+    if (typeof data.name === 'string') {
+      userToUpdate.name = data.name
+    }
+
+    if (typeof data.age !== undefined) {
+      userToUpdate.age = data.age
+    }
+
+    return userToUpdate
+  },
   deletePost: (parent, { id }, {db}) => {
     const postIndex = db.posts.findIndex(post => post.id === id)
     if (postIndex === -1) {
