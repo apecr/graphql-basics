@@ -97,7 +97,7 @@ const Mutation = {
 
     return postToUpdate
   },
-  createComment: (parent, { comment }, { db }) => {
+  createComment: (parent, { comment }, { db, pubsub }) => {
     const { text, author, post } = comment
     checkElementsFromArrayAndThrowError(db.users,
       checkUserId(author),
@@ -110,6 +110,7 @@ const Mutation = {
       text, author, post
     }
     db.comments.push(newComment)
+    pubsub.publish(`comment ${post}`, {comment: newComment})
     return newComment
   },
   updateComment: (parent, { id, data }, { db }, info) => {
