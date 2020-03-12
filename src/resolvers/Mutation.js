@@ -57,16 +57,25 @@ const Mutation = {
 
     return userToUpdate
   },
-  deletePost: (parent, { id }, { db }) => {
+  deletePost: (parent, { id }, { db, pubsub }) => {
     const postIndex = db.posts.findIndex(post => post.id === id)
     if (postIndex === -1) {
       throw new Error('Post not found')
     }
-    const deletedPosts = db.posts.splice(postIndex, 1)
+    const [ deletedPost ] = db.posts.splice(postIndex, 1)
 
     db.comments = db.comments.filter(comment => comment.post !== id)
 
-    return deletedPosts[0]
+    if (deletedPost.published === true) {
+      pubsub.publish('post', {
+        post: {
+          mutation: 'DELETED',
+          data: deletedPost
+        }
+      })
+    }
+
+    return deletedPost
   },
   createPost: (parent, { post }, { db, pubsub }) => {
     checkElementsFromArrayAndThrowError(db.users,
@@ -75,12 +84,18 @@ const Mutation = {
     const newPost = { ...post, id: uuidv4() }
     db.posts.push(newPost)
     if (newPost.published === true) {
-      pubsub.publish('post', {post: newPost})
+      pubsub.publish('post', {
+        post: {
+          mutation: 'CREATED',
+          data: newPost
+        }
+      })
     }
     return newPost
   },
-  updatePost: (parent, { id, data }, { db }, info) => {
+  updatePost: (parent, { id, data }, { db, pubsub }, info) => {
     const postToUpdate = db.posts.find(post => post.id === id)
+    const originalPost = { ...postToUpdate }
 
     if (!postToUpdate) {
       throw new Error('Post not found')
@@ -96,6 +111,31 @@ const Mutation = {
 
     if (typeof data.published === 'boolean') {
       postToUpdate.published = data.published
+      if (originalPost.published && !postToUpdate.published) {
+        // deleted
+        pubsub.publish('post', {
+          post: {
+            mutation: 'DELETED',
+            data: originalPost
+          }
+        })
+      } else if (!originalPost.published && postToUpdate.published) {
+        // created
+        pubsub.publish('post', {
+          post: {
+            mutation: 'CREATED',
+            data: postToUpdate
+          }
+        })
+      }
+    } else if (postToUpdate.published) {
+      // updated
+      pubsub.publish('post', {
+        post: {
+          mutation: 'UPDATED',
+          data: postToUpdate
+        }
+      })
     }
 
     return postToUpdate
@@ -113,7 +153,7 @@ const Mutation = {
       text, author, post
     }
     db.comments.push(newComment)
-    pubsub.publish(`comment ${post}`, {comment: newComment})
+    pubsub.publish(`comment ${post}`, { comment: newComment })
     return newComment
   },
   updateComment: (parent, { id, data }, { db }, info) => {

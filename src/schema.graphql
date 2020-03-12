@@ -31,6 +31,11 @@ type Query {
   post: Post!
 }
 
+type PostSubscriptionPayload{
+  mutation: String!
+  data: Post!
+}
+
 input CreateUserInput{
   name: String!
   email: String!
@@ -66,6 +71,8 @@ input UpdateCommentInput{
   text: String
 }
 
+
+
 type Mutation{
   createUser(data: CreateUserInput!): User!
   deleteUser(id: ID!): User!
@@ -80,5 +87,5 @@ type Mutation{
 
 type Subscription{
   comment(postId: ID!): Comment!
-  post: Post!
+  post: PostSubscriptionPayload!
 }
