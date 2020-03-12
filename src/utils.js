@@ -5,7 +5,6 @@ const matchAgainstSeveralElements = (arrElements, query) =>
 
 const checkElementsFromArrayAndThrowError = (arrayOfElements, comparation, errorMessage, any = false) => {
   const checkElements = arrayOfElements.some(comparation) // check the elements some aplies the function
-  console.log(checkElements, arrayOfElements)
   if ((any && checkElements) || (!any && !checkElements)) {
     throw new Error(errorMessage)
   }

@@ -2,7 +2,6 @@ import {matchAgainstSeveralElements} from './../utils'
 
 const Query = {
   users: (parent, { query }, { db }, info) => {
-    console.log(query, db)
     return query
       ? db.users.filter(user => user.name.toLowerCase().includes(query.toLowerCase()))
       : db.users

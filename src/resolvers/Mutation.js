@@ -68,12 +68,15 @@ const Mutation = {
 
     return deletedPosts[0]
   },
-  createPost: (parent, { post }, { db }) => {
+  createPost: (parent, { post }, { db, pubsub }) => {
     checkElementsFromArrayAndThrowError(db.users,
       checkUserId(post.author),
       'User does not exist')
     const newPost = { ...post, id: uuidv4() }
     db.posts.push(newPost)
+    if (newPost.published === true) {
+      pubsub.publish('post', {post: newPost})
+    }
     return newPost
   },
   updatePost: (parent, { id, data }, { db }, info) => {
