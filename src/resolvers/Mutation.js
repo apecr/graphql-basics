@@ -1,6 +1,15 @@
 import uuidv4 from 'uuid/v4'
 import { checkElementsFromArrayAndThrowError, checkUserId } from './../utils'
 
+// Goal: setup CREATED, UPDATED and DELETED for comment subscription
+//
+// 1. Set up a custom payload type for comment subscription with mutation and data.
+// 2. Update publish call in createComment to send back CREATED with the data
+// 3. Add publish call in deleteComment using DELETED event
+// 4. Add publish call in updateComment using UPDATED event
+// 5. Test your work by creatin, updating and deleting a comment.
+
+
 const Mutation = {
   createUser: (parent, { data }, { db }, info) => {
     const { name, email, age = 0 } = data
